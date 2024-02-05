@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-const main = mongoose.connect("mongodb://0.0.0.0:27017/MernWeb")
-main.then(()=>{console.log("taskmongodb connected")})
+const main = mongoose.connect("mongodb+srv://sagnikhalder10:Sagnik@2004@cluster0.drufzyf.mongodb.net/")
+main.then(()=>{console.log(`taskmongodb connected`)})
 main.catch(()=>{console.error("not connected")})
 
 const taskSchema=new mongoose.Schema({

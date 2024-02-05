@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken"
-const main = mongoose.connect("mongodb://0.0.0.0:27017/MernWeb")
+const main = mongoose.connect("mongodb+srv://sagnikhalder10:Sagnik@2004@cluster0.drufzyf.mongodb.net/")
 main.then(()=>{console.log("mongodb connected")})
 main.catch(()=>{console.error("not connected")})
 
