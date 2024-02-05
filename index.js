@@ -10,7 +10,7 @@ import Task from "./taskmongodb.js";
 import 'dotenv/config';
 import cors from "cors";
 const app = express();
-const port = 3000;
+const port = process.env.PORT||4000;
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cookieParser())
@@ -133,5 +133,5 @@ app.delete("/delete/:id", isAuth, async (req, res) => {
     })
 })
 app.listen(port, (req, res) => {
-    console.log(`connected to ${port} in ${process.env.Node_ENV} mode`)
+    console.log(`connected to ${port}`)
 })
