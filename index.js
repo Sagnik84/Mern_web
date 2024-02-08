@@ -58,9 +58,10 @@ app.post("/login", async (req, res) => {
 })
 app.get("/logout", isAuth, (req, res) => {
     res.cookie("token", "null", {
+        httpOnly:true,
         maxAge: 0,
-       // sameSite:"strict",
-        //secure: "true",
+        sameSite:process.env.Node_ENV==="development"? "lax":"none",
+        secure:process.env.Node_ENV==="development"? false:true,
     })
         .json({ message: "logout successfully" })
 })
@@ -73,7 +74,7 @@ app.get("/myProfile", isAuth, async (req, res) => {
 })
 app.post("/app/v1/newtask", isAuth, async (req, res) => {
     const getcookie = req.cookies;
-    const decode = jwt.verify(getcookie.token, "eswghjgu")
+    const decode = jwt.verify(getcookie.token, process.env.Secretkey)
     //console.log(decode._id)
     let userid = decode._id;
     const { title, task } = req.body;
@@ -87,7 +88,7 @@ app.post("/app/v1/newtask", isAuth, async (req, res) => {
 })
 app.get("/app/v1/alltask", isAuth, async (req, res) => {
     const getcookie = req.cookies;
-    const decode = jwt.verify(getcookie.token, "eswghjgu")
+    const decode = jwt.verify(getcookie.token, process.env.Secretkey)
     //console.log(decode._id)
     let userid = decode._id;
     const allwork = await Task.find({ UserId: userid })
@@ -105,7 +106,7 @@ app.put("/update/:id", isAuth, async (req, res) => {
 
     //this is to show all work of the specific user ,means /allwork
     const getcookie = req.cookies;
-    const decode = jwt.verify(getcookie.token, "eswghjgu")
+    const decode = jwt.verify(getcookie.token, process.env.Secretkey)
     //console.log(decode._id)
     let userid = decode._id;
     const allwork = await Task.find({ UserId: userid })
@@ -122,7 +123,7 @@ app.delete("/delete/:id", isAuth, async (req, res) => {
 
     //this is to show all work of the specific user ,means /allwork
     const getcookie = req.cookies;
-    const decode = jwt.verify(getcookie.token, "eswghjgu")
+    const decode = jwt.verify(getcookie.token, process.env.Secretkey)
     //console.log(decode._id)
     let userid = decode._id;
     const allwork = await Task.find({ UserId: userid })
@@ -133,5 +134,5 @@ app.delete("/delete/:id", isAuth, async (req, res) => {
     })
 })
 app.listen(port, (req, res) => {
-    console.log(`connected to ${port}`)
+    console.log(`connected to ${port} and in ${process.env.Node_ENV} mode`)
 })

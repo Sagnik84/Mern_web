@@ -13,7 +13,7 @@ const isAuth= async(req,res,next)=>
             message:"login first"
         })
     }
-    else{const decode= jwt.verify(getcookie.token,"eswghjgu")
+    else{const decode= jwt.verify(getcookie.token,process.env.Secretkey)
     //console.log(decode._id)
     let id=decode._id;
     req.user= await User.findById(id)
