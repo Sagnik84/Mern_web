@@ -18,7 +18,7 @@ app.set("view engine", "hbs")
 app.use(cors({
     origin:[process.env.FRONTEND_URL],
     methods:["GET","POST","PUT","DELETE"],
-    Credential:true,
+    credentials:true,
 }))
 
 app.get("/", (req, res) => {
