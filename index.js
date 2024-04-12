@@ -9,6 +9,9 @@ import sendcookie from "./utils/cookie.js";
 import Task from "./taskmongodb.js";
 import 'dotenv/config';
 import cors from "cors";
+import { customAlphabet } from 'nanoid';
+import QRCode from 'qrcode'
+
 const app = express();
 const port = process.env.PORT||4000;
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -29,8 +32,30 @@ app.get("/register", (req, res) => {
 })
 app.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
-    const user = await User.create({ name, email, password })
-    sendcookie(user, res, "registered succesfully", 201)
+    const alphabet = 'SLA0123456789';
+
+    // Create a function that generates IDs
+    const generateID = customAlphabet(alphabet, 10);
+  
+    // Generate an ID
+    const id = generateID();
+  
+    //console.log('Generated ID:', id);
+  
+    const generateQR = async (id,text) => {
+     
+      try {
+  
+        //console.log(await QRCode.toDataURL(text))
+        const Base64 = await QRCode.toDataURL(text)
+        //const user = await User.create({ number: id, myfile: Base64 })
+        const user = await User.create({ name, email, password, number: id, myfile: Base64 })
+        sendcookie(user, res, "registered succesfully", 201)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    generateQR(id,`${id}`)
 })
 app.get("/login", (req, res) => { res.render("login.hbs") })
 app.post("/login", async (req, res) => {
@@ -98,6 +123,15 @@ app.get("/app/v1/alltask", isAuth, async (req, res) => {
         allwork,
     })
 })
+
+app.get("/ShowQr",isAuth,async(req,res)=>{
+    //const id=req.params.id
+    res.json({
+      message: "fetch succfully",
+      success: true,
+      user: req.user.myfile
+    })
+  })
 app.put("/update/:id", isAuth, async (req, res) => {
     const IdOfTask = req.params.id;
     //console.log(IdOfTask)

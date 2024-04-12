@@ -17,7 +17,20 @@ const user=new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    number:{
+        type:String,
+        default:"euhu"
+    },
+    myfile:{
+        type:String,
+        default:"ilasjdl"
+    },
+    done:{
+        type:Boolean,
+        default:false
     }
+   
 })
 
 const User=new mongoose.model("user",user)
