@@ -97,6 +97,19 @@ app.get("/myProfile", isAuth, async (req, res) => {
         user: req.user
     })
 })
+app.put('/scan', async(req, res) => {
+    const qrCodeData = req.body.hlo;
+    console.log('Scanned QR code:', qrCodeData);
+    const user= await User.find({number:qrCodeData})
+    if(user){
+        await User.findOneAndUpdate({number:qrCodeData}, { done: true })
+        res.json({ success: true, message: "Have Your meal"});
+    }
+    else{
+        //console.log("already deleted")
+        res.json({message:"update Already"})
+    }
+});
 app.post("/app/v1/newtask", isAuth, async (req, res) => {
     const getcookie = req.cookies;
     const decode = jwt.verify(getcookie.token, process.env.Secretkey)
