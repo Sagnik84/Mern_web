@@ -19,7 +19,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.set("view engine", "hbs")
 app.use(cors({
-    origin:[process.env.FRONTEND_URL],
+    origin:[process.env.FRONTEND_URL,process.env.FRONTEND_URL1],
     methods:["GET","POST","PUT","DELETE"],
     credentials:true,
 }))
@@ -97,19 +97,24 @@ app.get("/myProfile", isAuth, async (req, res) => {
         user: req.user
     })
 })
-app.put('/scan', async(req, res) => {
-    const qrCodeData = req.body.hlo;
-    console.log('Scanned QR code:', qrCodeData);
-    const user= await User.find({number:qrCodeData})
+app.delete('/scan', async(req, res) => {
+    //const number = req.body.number;
+    //console.log('Scanned QR code:', number);
+    const user= await User.find({number:req.body.number})
+   // console.log(user)
     if(user){
-        await User.findOneAndUpdate({number:qrCodeData}, { done: true })
-        res.json({ success: true, message: "Have Your meal"});
+        const dluser=await User.deleteOne({number:req.body.number})
+        res.json({ success: true, message: "Have your meal",dluser});
+        //console.log(dluser)
     }
-    else{
+    else
+    {
         //console.log("already deleted")
         res.json({message:"update Already"})
     }
 });
+
+
 app.post("/app/v1/newtask", isAuth, async (req, res) => {
     const getcookie = req.cookies;
     const decode = jwt.verify(getcookie.token, process.env.Secretkey)
@@ -137,14 +142,7 @@ app.get("/app/v1/alltask", isAuth, async (req, res) => {
     })
 })
 
-app.get("/ShowQr",isAuth,async(req,res)=>{
-    //const id=req.params.id
-    res.json({
-      message: "fetch succfully",
-      success: true,
-      user: req.user.myfile
-    })
-  })
+
 app.put("/update/:id", isAuth, async (req, res) => {
     const IdOfTask = req.params.id;
     //console.log(IdOfTask)
